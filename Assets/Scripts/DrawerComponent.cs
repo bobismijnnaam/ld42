@@ -9,6 +9,10 @@ public class DrawerComponent : Activatable {
         CLOSED
     }
 
+    public float deltaX;
+    public float deltaY;
+    public float deltaZ;
+
     private State state = State.CLOSED;
 
 	// Use this for initialization
@@ -30,10 +34,10 @@ public class DrawerComponent : Activatable {
 
     public override void activate() {
         if (state == State.OPEN) {
-            gameObject.transform.Translate(10, 0, 0);
+            gameObject.transform.Translate(deltaX, deltaY, deltaZ);
             state = State.CLOSED;
         } else if (state == State.CLOSED) {
-            gameObject.transform.Translate(-10, 0, 0);
+            gameObject.transform.Translate(-deltaX, -deltaY, -deltaZ);
             state = State.OPEN;
         }
     }

@@ -53,6 +53,12 @@ public class Player : MonoBehaviour {
                     numSpaceBars += 1;
                     updateSpaceBarCount();
                 }
+            } else if (lookingAtActivatable()) {
+                Activatable acti = getActivatableInFront();   
+                showFlavorText("Press F to " + acti.getDescription());
+                if (Input.GetButtonDown("Fire1")) {
+                    acti.activate();
+                }
             } else {
                 flavorText.enabled = false;
             }
@@ -72,6 +78,19 @@ public class Player : MonoBehaviour {
             return hit.collider.gameObject;
         }
         return null;
+    }
+
+    Activatable getActivatableInFront() {
+        RaycastHit hit;
+        var wasHit = Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out hit, 10f);
+        if (wasHit) {
+            return hit.collider.gameObject.GetComponentInParent<Activatable>();
+        }
+        return null;
+    }
+
+    bool lookingAtActivatable() {
+        return getActivatableInFront() != null;
     }
 
     bool lookingAtSpaceBarDrop() {
