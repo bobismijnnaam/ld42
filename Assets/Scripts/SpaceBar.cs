@@ -11,12 +11,16 @@ public class SpaceBar : MonoBehaviour {
         SINKING
     }
 
+    private Renderer renderer;
     private SpaceBarState state;
     private float sinkingStart;
+    private int numSinks;
+    private int maxSinks;
 
 	// Use this for initialization
 	void Start () {
-		
+		maxSinks = 5;
+        renderer = gameObject.GetComponent<Renderer>();
 	}
 	
 	// Update is called once per frame
@@ -29,6 +33,8 @@ public class SpaceBar : MonoBehaviour {
                 Debug.Log("Finished sinking");
             }
         }
+
+        updateSpaceBarColor();
 	}
 
     public bool isAvailable() {
@@ -38,7 +44,20 @@ public class SpaceBar : MonoBehaviour {
     public void doSink() {
         state = SpaceBarState.SINKING;
         sinkingStart = Time.time;
+        numSinks += 1;
 
         Debug.Log("Started sinking");
+    }
+
+    public void updateSpaceBarColor() {
+        var startColor = new Color(245 / 255f, 245 / 255f, 220 / 255f);
+        var endColor = new Color(1, 0, 0);
+        
+        float p = (float) numSinks / maxSinks;
+        var currentColor = Color.Lerp(startColor, endColor, p);
+        Debug.Log(p);
+        Debug.Log(currentColor);
+
+        renderer.material.color = currentColor;
     }
 }
