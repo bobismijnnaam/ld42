@@ -8,8 +8,11 @@ public class SpaceBar : MonoBehaviour {
 
     enum SpaceBarState {
         AVAILABLE,
-        SINKING
+        SINKING,
+        BROKEN
     }
+
+    public GameObject brokenSpaceBar;
 
     private Renderer renderer;
     private SpaceBarState state;
@@ -47,17 +50,27 @@ public class SpaceBar : MonoBehaviour {
         numSinks += 1;
 
         Debug.Log("Started sinking");
+
+        if (numSinks == maxSinks) {
+            state = SpaceBarState.BROKEN;
+            renderer.enabled = false;
+            brokenSpaceBar.SetActive(true);
+        }
     }
 
     public void updateSpaceBarColor() {
         var startColor = new Color(245 / 255f, 245 / 255f, 220 / 255f);
         var endColor = new Color(1, 0, 0);
         
-        float p = (float) numSinks / maxSinks;
-        var currentColor = Color.Lerp(startColor, endColor, p);
-        Debug.Log(p);
-        Debug.Log(currentColor);
+        var currentColor = Color.Lerp(startColor, endColor, (float) numSinks / maxSinks);
 
         renderer.material.color = currentColor;
+    }
+
+    public void repair() {
+        numSinks = 0;
+        updateSpaceBarColor();
+        brokenSpaceBar.SetActive(false);
+        renderer.enabled = true;
     }
 }
