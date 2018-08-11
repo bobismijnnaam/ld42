@@ -8,8 +8,14 @@ public class SpaceGameController : MonoBehaviour {
     public SpaceBar spaceBar;
     public TextMesh spaceCountLabel;
     public GameObject noSpaceBarText;
+    public GameObject shopReticules;
+
+    public float approachSpeedPercentage = 0.20f;
 
     private int spaceCount;
+
+    private float shopReticuleYTarget = 1.13f;
+    
 
 	// Use this for initialization
 	void Start () {
@@ -44,6 +50,27 @@ public class SpaceGameController : MonoBehaviour {
                     noSpaceBarText.GetComponent<BlinkComponent>().blinkOnce(1f);
                 }
             }
+
+            if (Input.GetKeyDown("up")) {
+                shopReticuleYTarget += 0.53f;
+            }
+            if (Input.GetKeyDown("down")) {
+                shopReticuleYTarget -= 0.53f;
+            }
+            if (Input.GetKeyDown("enter")) {
+                
+            }
+
         }	
+
+        updateShopReticule();
 	}
+
+    void updateShopReticule() {
+        shopReticuleYTarget = Mathf.Min(1.13f, Mathf.Max(shopReticuleYTarget, -0.4f));
+
+        var currentPosition = shopReticules.transform.position;
+        currentPosition.y = currentPosition.y + (shopReticuleYTarget - currentPosition.y) * approachSpeedPercentage * Time.deltaTime;
+        shopReticules.transform.position = currentPosition;
+    }
 }
