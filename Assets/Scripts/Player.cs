@@ -46,4 +46,8 @@ public class Player : MonoBehaviour {
             playerMode = PlayerMode.WALKING;
         }
      }   
+
+    public bool isPlaying() {
+        return playerMode == PlayerMode.PLAYING;
+    }
 }
