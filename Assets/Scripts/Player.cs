@@ -34,7 +34,10 @@ public class Player : MonoBehaviour {
 
     bool lookingAtGameScreen() {
         RaycastHit hit;
-        var wasHit = Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out hit, 2f);
+        var wasHit = Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out hit, 3f);
+        if (wasHit) {
+            Debug.Log(hit.collider.gameObject.name);
+        }
         return wasHit && hit.collider.gameObject == gameScreenPlane;
     }
 	
