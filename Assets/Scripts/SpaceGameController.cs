@@ -9,18 +9,100 @@ public class SpaceGameController : MonoBehaviour {
     public TextMesh spaceCountLabel;
     public GameObject noSpaceBarText;
     public GameObject shopReticules;
+    public GameObject textMeshPrefab;
+    public GameObject spaceGameObject;
 
     public float approachSpeedPercentage = 0.20f;
 
     private int spaceCount;
-
     private float shopReticuleYTarget = 1.13f;
-    
+    private int shopItemIndex = 0;
+    private Dictionary<int, ShopItem> shopItemIndices;
+    private Dictionary<ShopItem, ShopItemInfo> shopItemDatas;
+
+    enum ShopItem {
+        AUTO_SPACE,
+        SWITCH_POWER,
+        ORDER_SPARES,
+        DURABILITY
+    }
+
+    class ShopItemInfo {
+        public string txt;
+        public int cost;
+        public int growthFactor;
+        public int level = 0;
+        public GameObject labelTextMesh;
+        public GameObject priceTextMesh;
+    }
 
 	// Use this for initialization
 	void Start () {
-        
+        shopItemIndices = new Dictionary<int, ShopItem>();
+        shopItemIndices[0] = ShopItem.AUTO_SPACE;
+        shopItemIndices[1] = ShopItem.SWITCH_POWER;
+        shopItemIndices[2] = ShopItem.ORDER_SPARES;
+        shopItemIndices[3] = ShopItem.DURABILITY;
+
+        shopItemDatas = new Dictionary<ShopItem, ShopItemInfo>();
+        {
+            var sh = new ShopItemInfo();
+            sh.txt = "AutoSpace";
+            sh.cost = 10;
+            sh.growthFactor = 100;
+            shopItemDatas[ShopItem.AUTO_SPACE] = sh;
+        }
+
+        {
+            var sh = new ShopItemInfo();
+            sh.txt = "Switch Power";
+            sh.cost = 10;
+            sh.growthFactor = 100;
+            shopItemDatas[ShopItem.SWITCH_POWER] = sh;
+        }
+
+        {
+            var sh = new ShopItemInfo();
+            sh.txt = "Order spares online";
+            sh.cost = 10;
+            sh.growthFactor = 100;
+            shopItemDatas[ShopItem.ORDER_SPARES] = sh;
+        }
+
+        {
+            var sh = new ShopItemInfo();
+            sh.txt = "Durability";
+            sh.cost = 10;
+            sh.growthFactor = 100;
+            shopItemDatas[ShopItem.DURABILITY] = sh;
+        }
+
+        instantiateShopLabels();
 	}
+
+    void instantiateShopLabels() {
+        float ySpacing = 0.53f;
+        Vector3 currentPos = new Vector3(-4.5f, 1.49f, -0.31f);
+        Vector3 currentPricePos = new Vector3(1.77f, 1.49f, -0.31f);
+
+        for (int i = 0; i < 4; ++i) {
+            var sh = shopItemDatas[shopItemIndices[i]];
+
+            var textMesh = Instantiate(textMeshPrefab, spaceGameObject.transform);
+            textMesh.transform.localPosition = currentPos - Vector3.zero;
+            textMesh.GetComponent<TextMesh>().text = sh.txt;
+
+            var priceTextMesh = Instantiate(textMeshPrefab, spaceGameObject.transform);
+            priceTextMesh.transform.localPosition = currentPricePos - Vector3.zero;
+            priceTextMesh.GetComponent<TextMesh>().text = sh.cost + "";
+
+            sh.priceTextMesh = priceTextMesh;
+            sh.labelTextMesh = textMesh;
+
+            currentPos.y -= ySpacing;
+            currentPricePos.y -= ySpacing;
+        }
+    }
 	
     void spaceBarPressed() {
         if (spaceBar.isAvailable()) {
@@ -53,18 +135,63 @@ public class SpaceGameController : MonoBehaviour {
 
             if (Input.GetKeyDown("up")) {
                 shopReticuleYTarget += 0.53f;
+                shopItemIndex -= 1;
             }
             if (Input.GetKeyDown("down")) {
                 shopReticuleYTarget -= 0.53f;
-            }
-            if (Input.GetKeyDown("enter")) {
-                
+                shopItemIndex += 1;
             }
 
+            shopItemIndex = Mathf.Clamp(shopItemIndex, 0, 3);
+
+            if (Input.GetKeyDown("return")) {
+                var sh = getCurrentShopItemInfo();
+                if (sh.cost <= spaceCount) {
+                    buyShopItem(sh);
+                }
+            }
+            
+            if (Input.GetKeyDown("n")) {
+                spaceCount += 100;
+                updateSpaceCountLabel();
+            }
         }	
 
         updateShopReticule();
 	}
+
+    void updateAllShopItems() {
+        for (int i = 0; i < 4; ++i) {
+            var sh = shopItemDatas[shopItemIndices[shopItemIndex]];
+            updateShopItem(sh);
+        }
+    }
+
+    void updateShopItem(ShopItemInfo shi) {
+        var labelTM = shi.labelTextMesh.GetComponent<TextMesh>();
+        var priceTM = shi.priceTextMesh.GetComponent<TextMesh>();
+
+        priceTM.text = shi.cost + "";
+
+        if (spaceCount >= shi.cost) {
+            labelTM.color = new Color(0.7f, 0.7f, 0.7f);
+        } else {
+            labelTM.color = new Color(1, 1, 1);
+        }
+    }
+
+    void buyShopItem(ShopItemInfo shi) {
+        shi.level++;
+        spaceCount -= shi.cost;
+        shi.cost *= shi.growthFactor;
+
+        updateSpaceCountLabel();
+        updateAllShopItems();
+    }
+
+    ShopItemInfo getCurrentShopItemInfo() {
+        return shopItemDatas[shopItemIndices[shopItemIndex]];
+    }
 
     void updateShopReticule() {
         shopReticuleYTarget = Mathf.Min(1.13f, Mathf.Max(shopReticuleYTarget, -0.4f));
