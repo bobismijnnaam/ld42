@@ -13,6 +13,7 @@ public class SpaceBar : MonoBehaviour {
     }
 
     public GameObject brokenSpaceBar;
+    public GameObject brokenText;
 
     private Renderer renderer;
     private SpaceBarState state;
@@ -44,6 +45,10 @@ public class SpaceBar : MonoBehaviour {
         return state == SpaceBarState.AVAILABLE;
     }
 
+    public bool isBroken() {
+        return state == SpaceBarState.BROKEN;
+    }
+
     public void doSink() {
         state = SpaceBarState.SINKING;
         sinkingStart = Time.time;
@@ -55,6 +60,7 @@ public class SpaceBar : MonoBehaviour {
             state = SpaceBarState.BROKEN;
             renderer.enabled = false;
             brokenSpaceBar.SetActive(true);
+            brokenText.SetActive(true);
         }
     }
 
@@ -72,5 +78,7 @@ public class SpaceBar : MonoBehaviour {
         updateSpaceBarColor();
         brokenSpaceBar.SetActive(false);
         renderer.enabled = true;
+        brokenText.SetActive(false);
+        state = SpaceBarState.AVAILABLE;
     }
 }

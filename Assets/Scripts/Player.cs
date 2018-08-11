@@ -28,6 +28,10 @@ public class Player : MonoBehaviour {
         updateSpaceBarCount();
 	}
 
+    public int getNumSpacebars() {
+        return numSpaceBars;
+    }
+
     bool lookingAtGameScreen() {
         RaycastHit hit;
         var wasHit = Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out hit, 2f);
@@ -106,5 +110,10 @@ public class Player : MonoBehaviour {
     public void showFlavorText(string txt) {
         flavorText.text = txt;
         flavorText.enabled = true;
+    }
+
+    public void takeASpaceBar() {
+        numSpaceBars -= 1;
+        updateSpaceBarCount();
     }
 }
