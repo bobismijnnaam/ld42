@@ -14,15 +14,19 @@ public class SpaceGameController : Activatable {
     public Camera screenCamera;
     public SpareDeliverer spareDeliverer;
     public TextMesh deliveryTomorrowText;
+    public GameObject shopSlots;
 
     public float approachSpeedPercentage = 0.20f;
+    public float shopSlotSpeedPercentage = 5f;
 
     private int spaceCount;
     private float shopReticuleYTarget = 1.13f;
     private int shopItemIndex = 0;
+    private int shopItemSlotIndex = 0;
     private Dictionary<int, ShopItem> shopItemIndices;
     private Dictionary<ShopItem, ShopItemInfo> shopItemDatas;
     private double lastAutoSpaceTick;
+    private float shopSlotXTarget = -4.67f;
 
     enum State {
         PLAYING,
@@ -55,6 +59,11 @@ public class SpaceGameController : Activatable {
         shopItemIndices[1] = ShopItem.SWITCH_POWER;
         shopItemIndices[2] = ShopItem.DURABILITY;
         shopItemIndices[3] = ShopItem.ORDER_SPARES;
+
+        shopItemIndices[4] = ShopItem.AUTO_SPACE;
+        shopItemIndices[5] = ShopItem.SWITCH_POWER;
+        shopItemIndices[6] = ShopItem.DURABILITY;
+        shopItemIndices[7] = ShopItem.ORDER_SPARES;
 
         shopItemDatas = new Dictionary<ShopItem, ShopItemInfo>();
         {
@@ -98,27 +107,38 @@ public class SpaceGameController : Activatable {
         lastAutoSpaceTick = Time.time;
 	}
 
+    private const float SLOT_X_SPACING = 11;
+
     void instantiateShopLabels() {
-        float ySpacing = 0.53f;
-        Vector3 currentPos = new Vector3(-4.5f, 1.49f, -0.31f);
-        Vector3 currentPricePos = new Vector3(1.77f, 1.49f, -0.31f);
+        const float Y_SPACING = 0.53f;
+        var currentPos = new Vector3(0, 0, 0);
+        var currentPricePos = new Vector3(6.39f, 0, 0);
 
-        for (int i = 0; i < 4; ++i) {
-            var sh = shopItemDatas[shopItemIndices[i]];
+        for (int slotIndex = 0; slotIndex < shopItemIndices.Count; slotIndex += 4) {
+            currentPos.y = 0;
+            currentPricePos.y = 0;
 
-            var textMesh = Instantiate(textMeshPrefab, spaceGameObject.transform);
-            textMesh.transform.localPosition = currentPos - Vector3.zero;
-            textMesh.GetComponent<TextMesh>().text = sh.txt;
+            for (int i = 0; i < 4; ++i) {
+                var shopItemI = slotIndex + i;
+                var sh = shopItemDatas[shopItemIndices[shopItemI]];
 
-            var priceTextMesh = Instantiate(textMeshPrefab, spaceGameObject.transform);
-            priceTextMesh.transform.localPosition = currentPricePos - Vector3.zero;
-            priceTextMesh.GetComponent<TextMesh>().text = sh.cost + "";
+                var textMesh = Instantiate(textMeshPrefab, shopSlots.transform);
+                textMesh.transform.localPosition = currentPos;
+                textMesh.GetComponent<TextMesh>().text = sh.txt;
 
-            sh.priceTextMesh = priceTextMesh;
-            sh.labelTextMesh = textMesh;
+                var priceTextMesh = Instantiate(textMeshPrefab, shopSlots.transform);
+                priceTextMesh.transform.localPosition = currentPricePos;
+                priceTextMesh.GetComponent<TextMesh>().text = sh.cost + "";
 
-            currentPos.y -= ySpacing;
-            currentPricePos.y -= ySpacing;
+                sh.priceTextMesh = priceTextMesh;
+                sh.labelTextMesh = textMesh;
+
+                currentPos.y -= Y_SPACING;
+                currentPricePos.y -= Y_SPACING;
+            }
+
+            currentPos.x += SLOT_X_SPACING;
+            currentPricePos.x += SLOT_X_SPACING;
         }
 
         updateAllShopItems();
@@ -169,15 +189,16 @@ public class SpaceGameController : Activatable {
             if (Input.GetKeyDown("up")) {
                 shopReticuleYTarget += 0.53f;
                 shopItemIndex -= 1;
-            }
-            if (Input.GetKeyDown("down")) {
+            } else if (Input.GetKeyDown("down")) {
                 shopReticuleYTarget -= 0.53f;
                 shopItemIndex += 1;
-            }
-
-            shopItemIndex = Mathf.Clamp(shopItemIndex, 0, 3);
-
-            if (Input.GetKeyDown("return")) {
+            } else if (Input.GetKeyDown("right")) {
+                shopItemSlotIndex += 1;
+                moveSlots(1);
+            } else if (Input.GetKeyDown("left")) {
+                shopItemSlotIndex -= 1;
+                moveSlots(-1);
+            } else if (Input.GetKeyDown("return")) {
                 var sh = getCurrentShopItemInfo();
                 if (sh.cost <= spaceCount && sh.level < sh.maxLevel) {
                     buyShopItem(sh);
@@ -194,6 +215,8 @@ public class SpaceGameController : Activatable {
                     }
                 }
             }
+
+            shopItemIndex = Mathf.Clamp(shopItemIndex, 0, 3);
             
             if (Input.GetKeyDown("n")) {
                 spaceCount += 123456789;
@@ -204,10 +227,22 @@ public class SpaceGameController : Activatable {
         updateShopReticule();
 
         updateAutoSpace();
+
+        updateSlotsAnimation();
 	}
 
+    void moveSlots(int dir) {
+        shopSlotXTarget += dir * SLOT_X_SPACING;
+    }
+
+    void updateSlotsAnimation() {
+        Vector3 pos = shopSlots.transform.localPosition;
+        pos.x = pos.x + (shopSlotXTarget - pos.x) * shopSlotSpeedPercentage * Time.deltaTime;
+        shopSlots.transform.localPosition = pos;
+    }
+
     void updateAllShopItems() {
-        for (int i = 0; i < 4; ++i) {
+        for (int i = 0; i < shopItemIndices.Count; ++i) {
             var sh = shopItemDatas[shopItemIndices[i]];
             updateShopItem(sh);
         }
