@@ -38,6 +38,8 @@ public class DuvetComponent : Activatable {
         Invoke("wakeUp", 5.5f);
         if (spareDeliverer.hasOrder()) {
             Invoke("triggerToot", 3.5f);
+        } else {
+            Debug.Log("no order!");
         }
     }
 

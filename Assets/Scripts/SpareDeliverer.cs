@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class SpareDeliverer : MonoBehaviour {
 
+    public Player player;
+    public GameObject packagePrefab;
+
     int numOrdered;
 
 	// Use this for initialization
@@ -31,6 +34,11 @@ public class SpareDeliverer : MonoBehaviour {
     }
 
     public void spawnDelivery() {
-        Debug.Log("Not implemented!");
+        var packageObj = Instantiate(packagePrefab);
+        var packageComponent = packageObj.GetComponent<PackageComponent>();
+
+        packageComponent.transform.position = new Vector3(-6.58f, 0.28f, 0.10f);
+        packageComponent.player = player;
+        packageComponent.numContainedSpacebars = numOrdered;
     }
 }

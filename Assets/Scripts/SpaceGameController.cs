@@ -179,7 +179,7 @@ public class SpaceGameController : Activatable {
                     if (getCurrentShopItem() == ShopItem.DURABILITY) {
                         spaceBar.setMaxSinks(getCurrentMaxSinks());
                     }
-                    if (getCurrentShopItem() == ShopItem.DURABILITY) {
+                    if (getCurrentShopItem() == ShopItem.ORDER_SPARES) {
                         spareDeliverer.addOrder();
                     }
                 }

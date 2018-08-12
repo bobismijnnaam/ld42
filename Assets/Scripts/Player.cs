@@ -44,7 +44,6 @@ public class Player : MonoBehaviour {
         } else if (lookingAtActivatable()) {
             Activatable acti = getActivatableInFront();   
             showFlavorText("Press F to " + acti.getDescription());
-            Debug.Log(acti.gameObject.name);
             if (Input.GetButtonDown("Fire1")) {
                 Debug.Log("FIRE IN THE HOLE");
                 acti.activate();
@@ -66,10 +65,7 @@ public class Player : MonoBehaviour {
     Activatable getActivatableInFront() {
         RaycastHit hit;
         var wasHit = Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out hit, 10f);
-        Debug.Log(mainCamera.transform.position);
-        Debug.Log("Looking for activatable...");
         if (wasHit) {
-            Debug.Log(hit.collider.gameObject.name);
             return hit.collider.gameObject.GetComponentInParent<Activatable>();
         }
         return null;
@@ -113,6 +109,11 @@ public class Player : MonoBehaviour {
 
     public void takeASpaceBar() {
         numSpaceBars -= 1;
+        updateSpaceBarCount();
+    }
+
+    public void giveSpacebars(int n) {
+        numSpaceBars += n;
         updateSpaceBarCount();
     }
 }
