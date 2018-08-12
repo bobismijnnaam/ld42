@@ -260,6 +260,10 @@ public class SpaceGameController : Activatable {
                 spaceCount += 123456789;
                 updateSpaceCountLabel();
             }
+
+            if (Input.GetKeyDown("m")) {
+                player.giveSpacebars(12345678);
+            }
         }	
 
         updateShopReticule();
