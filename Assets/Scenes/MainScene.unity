@@ -4218,6 +4218,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1118964139}
+  spaceBarPrefab: {fileID: 1537698995122000, guid: 568856fd7f4634df888f6fc01643fd39,
+    type: 2}
 --- !u!1 &697692008
 GameObject:
   m_ObjectHideFlags: 0

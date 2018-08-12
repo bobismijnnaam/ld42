@@ -6,6 +6,7 @@ public class QuestionComponent : Activatable {
 
     [NotNull]
     public Player player;
+    public GameObject spaceBarPrefab;
 
     AudioSource currentSource;
 
@@ -38,6 +39,13 @@ public class QuestionComponent : Activatable {
         if (Random.value < 0.2) {
             player.doShakeFadeOut(2.5f);
         }
+
+        if (Random.value < 0.5) {
+            GameObject newSpaceBar = Instantiate(spaceBarPrefab, gameObject.transform);
+            newSpaceBar.GetComponent<BoxCollider>().isTrigger = false;
+            newSpaceBar.transform.localPosition = new Vector3(0, 0, 0);
+            newSpaceBar.AddComponent<Rigidbody>();
+        }   
     }
 
     AudioSource getRandomAudioSource() {
