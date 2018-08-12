@@ -116,4 +116,8 @@ public class Player : MonoBehaviour {
         numSpaceBars += n;
         updateSpaceBarCount();
     }
+
+    public void lookAt(Vector3 v) {
+        mainCamera.transform.LookAt(v);
+    }
 }

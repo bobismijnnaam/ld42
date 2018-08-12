@@ -33,6 +33,8 @@ public class DuvetComponent : Activatable {
 
     public override void activate() {
         player.setViewWalkEnabled(false);
+        // Look at point light so text disappears
+        player.lookAt(new Vector3(0.82f, 1.38f, 4.12f));
         sleepCamera.enabled = true;
         blackSleepSurface.blinkOnce(7);
         Invoke("wakeUp", 5.5f);
