@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SpaceBar : MonoBehaviour {
 
-    public const float SINK_PAUSE = 0.2f;
+    public const float SINK_PAUSE = 0.01f;
 
     enum SpaceBarState {
         AVAILABLE,
@@ -23,7 +23,7 @@ public class SpaceBar : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		maxSinks = 5;
+		maxSinks = 100;
         renderer = gameObject.GetComponent<Renderer>();
 	}
 	

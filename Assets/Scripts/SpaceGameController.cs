@@ -19,6 +19,7 @@ public class SpaceGameController : MonoBehaviour {
     private int shopItemIndex = 0;
     private Dictionary<int, ShopItem> shopItemIndices;
     private Dictionary<ShopItem, ShopItemInfo> shopItemDatas;
+    private double lastAutoSpaceTick;
 
     enum ShopItem {
         AUTO_SPACE,
@@ -78,6 +79,8 @@ public class SpaceGameController : MonoBehaviour {
         }
 
         instantiateShopLabels();
+
+        lastAutoSpaceTick = Time.time;
 	}
 
     void instantiateShopLabels() {
@@ -107,9 +110,15 @@ public class SpaceGameController : MonoBehaviour {
     void spaceBarPressed() {
         if (spaceBar.isAvailable()) {
             spaceBar.doSink();
-            spaceCount += 1;
+            spaceCount += getCurrentSpacePower();
             updateSpaceCountLabel();
         }
+    }
+
+    int getCurrentSpacePower() {
+        var shi = shopItemDatas[ShopItem.SWITCH_POWER];
+        var spacePowers = new int [] {1, 2, 5, 20, 100};
+        return spacePowers[shi.level];
     }
 
     void updateSpaceCountLabel() {
@@ -149,6 +158,10 @@ public class SpaceGameController : MonoBehaviour {
                 if (sh.cost <= spaceCount) {
                     buyShopItem(sh);
                 }
+
+                if (getCurrentShopItem() == ShopItem.AUTO_SPACE) {
+                    lastAutoSpaceTick = Time.time;
+                }
             }
             
             if (Input.GetKeyDown("n")) {
@@ -158,6 +171,8 @@ public class SpaceGameController : MonoBehaviour {
         }	
 
         updateShopReticule();
+
+        updateAutoSpace();
 	}
 
     void updateAllShopItems() {
@@ -189,8 +204,12 @@ public class SpaceGameController : MonoBehaviour {
         updateAllShopItems();
     }
 
+    ShopItem getCurrentShopItem() {
+        return shopItemIndices[shopItemIndex];
+    }
+
     ShopItemInfo getCurrentShopItemInfo() {
-        return shopItemDatas[shopItemIndices[shopItemIndex]];
+        return shopItemDatas[getCurrentShopItem()];
     }
 
     void updateShopReticule() {
@@ -199,5 +218,22 @@ public class SpaceGameController : MonoBehaviour {
         var currentPosition = shopReticules.transform.position;
         currentPosition.y = currentPosition.y + (shopReticuleYTarget - currentPosition.y) * approachSpeedPercentage * Time.deltaTime;
         shopReticules.transform.position = currentPosition;
+    }
+
+    void updateAutoSpace() {
+        var shi = shopItemDatas[ShopItem.AUTO_SPACE];
+        var spacesPerSecArr = new int [] {1, 10, 100, 1000};
+        if (shi.level > 0) {
+            var spacesPerSec = spacesPerSecArr[shi.level - 1];
+            var timePerTick = 1 / (double) spacesPerSec;
+            var timeDiff = Time.time - lastAutoSpaceTick;
+            if (timeDiff >= timePerTick) {
+                var leftover = timeDiff % timePerTick;
+                int numSpacesToAdd = (int) System.Math.Ceiling(((timeDiff - leftover) / timePerTick));
+                spaceCount += numSpacesToAdd;
+                updateSpaceCountLabel();
+                lastAutoSpaceTick = Time.time - leftover;
+            }
+        }
     }
 }
