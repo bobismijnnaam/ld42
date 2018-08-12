@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class SpaceGameController : Activatable {
 
+    [NotNull]
     public Player player;
+
     public SpaceBar spaceBar;
     public TextMesh spaceCountLabel;
     public GameObject noSpaceBarText;
@@ -223,14 +225,8 @@ public class SpaceGameController : Activatable {
             }
 
             if (Input.GetKeyDown("up")) {
-                //shopReticuleYTarget += Y_SPACING;
-                //shopItemIndex -= 1;
-
                 moveReticule(-1);
             } else if (Input.GetKeyDown("down")) {
-                //shopReticuleYTarget -= Y_SPACING;
-                //shopItemIndex += 1;
-
                 moveReticule(1);
             } else if (Input.GetKeyDown("right")) {
                 moveSlots(1);

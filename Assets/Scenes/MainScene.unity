@@ -2356,6 +2356,7 @@ MonoBehaviour:
   deliveryTomorrowText: {fileID: 1962043901}
   shopSlots: {fileID: 1568189281}
   approachSpeedPercentage: 5
+  shopSlotSpeedPercentage: 5
 --- !u!1 &614798017
 GameObject:
   m_ObjectHideFlags: 0
