@@ -61,7 +61,7 @@ public class SpaceGameController : Activatable {
             var sh = new ShopItemInfo();
             sh.txt = "AutoSpace";
             sh.cost = 10;
-            sh.growthFactor = 20;
+            sh.growthFactor = 8;
             sh.maxLevel = 4;
             shopItemDatas[ShopItem.AUTO_SPACE] = sh;
         }
