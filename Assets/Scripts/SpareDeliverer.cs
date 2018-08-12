@@ -24,7 +24,7 @@ public class SpareDeliverer : MonoBehaviour {
 	}
 
     public void addOrder() {
-        numOrdered += 10;
+        numOrdered += 2;
     }
 
     public void addShrine() {

@@ -81,8 +81,8 @@ public class SpaceGameController : Activatable {
         {
             var sh = new ShopItemInfo();
             sh.txt = "Switch Power";
-            sh.cost = 10;
-            sh.growthFactor = 80;
+            sh.cost = 100;
+            sh.growthFactor = 3;
             sh.maxLevel = 4;
             shopItemDatas[ShopItem.SWITCH_POWER] = sh;
         }
@@ -90,8 +90,8 @@ public class SpaceGameController : Activatable {
         {
             var sh = new ShopItemInfo();
             sh.txt = "Order spares online";
-            sh.cost = 1000;
-            sh.growthFactor = 1.01f;
+            sh.cost = 500;
+            sh.growthFactor = 2f;
             sh.maxLevel = 999999;
             shopItemDatas[ShopItem.ORDER_SPARES] = sh;
         }
@@ -100,7 +100,7 @@ public class SpaceGameController : Activatable {
             var sh = new ShopItemInfo();
             sh.txt = "Durability";
             sh.cost = 500;
-            sh.growthFactor = 2;
+            sh.growthFactor = 1.5f;
             sh.maxLevel = 4;
             shopItemDatas[ShopItem.DURABILITY] = sh;
         }
@@ -108,8 +108,8 @@ public class SpaceGameController : Activatable {
         {
             var sh = new ShopItemInfo();
             sh.txt = "Stochastic Boost";
-            sh.cost = 1000;
-            sh.growthFactor = 5f;
+            sh.cost = 800;
+            sh.growthFactor = 2f;
             sh.maxLevel = 3;
             shopItemDatas[ShopItem.STOCHASTIC_BOOST] = sh;
         }
@@ -117,7 +117,7 @@ public class SpaceGameController : Activatable {
         {
             var sh = new ShopItemInfo();
             sh.txt = "Space Buddha Shrine";
-            sh.cost = 10000;
+            sh.cost = 800;
             sh.growthFactor = 1;
             sh.maxLevel = 1;
             shopItemDatas[ShopItem.SHRINE] = sh;
@@ -193,7 +193,7 @@ public class SpaceGameController : Activatable {
 
     int getCurrentSpacePower() {
         var shi = shopItemDatas[ShopItem.SWITCH_POWER];
-        var spacePowers = new int [] {1, 2, 5, 20, 100};
+        var spacePowers = new int [] {1, 2, 5, 8, 10};
         return spacePowers[shi.level];
     }
 
@@ -224,13 +224,13 @@ public class SpaceGameController : Activatable {
                 }
             }
 
-            if (Input.GetKeyDown("up")) {
+            if (Input.GetKeyDown("up") || Input.GetKeyDown("w")) {
                 moveReticule(-1);
-            } else if (Input.GetKeyDown("down")) {
+            } else if (Input.GetKeyDown("down") || Input.GetKeyDown("s")) {
                 moveReticule(1);
-            } else if (Input.GetKeyDown("right")) {
+            } else if (Input.GetKeyDown("right") || Input.GetKeyDown("d")) {
                 moveSlots(1);
-            } else if (Input.GetKeyDown("left")) {
+            } else if (Input.GetKeyDown("left") || Input.GetKeyDown("a")) {
                 moveSlots(-1);
             } else if (Input.GetKeyDown("return")) {
                 var sh = getCurrentShopItemInfo();
@@ -383,6 +383,7 @@ public class SpaceGameController : Activatable {
                 spaceCount += numSpacesToAdd;
                 updateSpaceCountLabel();
                 lastAutoSpaceTick = Time.time - leftover;
+                updateAllShopItems();
             }
         }
     }
