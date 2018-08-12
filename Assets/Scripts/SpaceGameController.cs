@@ -12,6 +12,7 @@ public class SpaceGameController : Activatable {
     public GameObject textMeshPrefab;
     public GameObject spaceGameObject;
     public Camera screenCamera;
+    public SpareDeliverer spareDeliverer;
 
     public float approachSpeedPercentage = 0.20f;
 
@@ -177,6 +178,9 @@ public class SpaceGameController : Activatable {
                     }
                     if (getCurrentShopItem() == ShopItem.DURABILITY) {
                         spaceBar.setMaxSinks(getCurrentMaxSinks());
+                    }
+                    if (getCurrentShopItem() == ShopItem.DURABILITY) {
+                        spareDeliverer.addOrder();
                     }
                 }
             }
