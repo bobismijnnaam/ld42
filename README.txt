@@ -7,6 +7,10 @@ A game by bobismijnnaam for Ludum Dare 42, about a protagonist losing himself in
 Mouse to look around, wasd to walk around, F to interact. Don't forget the front door!
 The game contains sounds but some might be a bit harsh. Don't leave your speakers on 100%!
 
+==== Files ====
+
+The zip contains linux, windows, macos, and webgl builds. Pick the one you need! Macosx build is untested.
+
 ==== Tools ====
 
 Unity (FPS Character, postprocessing)
