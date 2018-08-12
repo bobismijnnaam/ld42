@@ -22,7 +22,7 @@ public class SpaceGameController : Activatable {
     public float shopSlotSpeedPercentage = 5f;
 
     private int spaceCount;
-    private float shopReticuleYTarget = 1.13f;
+    private float shopReticuleYTarget = 2.53f;
     private int shopItemIndex = 0;
     private int shopItemSlotIndex = 0;
     private Dictionary<int, ShopItem> shopItemIndices;
@@ -284,7 +284,7 @@ public class SpaceGameController : Activatable {
 
     void setReticuleRowTarget(int row) {
         shopItemIndex = row;
-        shopReticuleYTarget = row * Y_SPACING;
+        shopReticuleYTarget = 2.53f - row * Y_SPACING;
     }
 
     void moveSlots(int dir) {
@@ -365,7 +365,7 @@ public class SpaceGameController : Activatable {
     }
 
     void updateShopReticule() {
-        shopReticuleYTarget = Mathf.Min(1.13f, Mathf.Max(shopReticuleYTarget, -0.4f));
+        shopReticuleYTarget = Mathf.Min(2.53f, Mathf.Max(shopReticuleYTarget, 0.94f));
 
         var currentPosition = shopReticules.transform.position;
         currentPosition.y = currentPosition.y + (shopReticuleYTarget - currentPosition.y) * approachSpeedPercentage * Time.deltaTime;
