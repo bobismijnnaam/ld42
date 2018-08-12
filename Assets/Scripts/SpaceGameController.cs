@@ -256,13 +256,15 @@ public class SpaceGameController : Activatable {
 
             shopItemIndex = Mathf.Clamp(shopItemIndex, 0, 3);
             
-            if (Input.GetKeyDown("n")) {
-                spaceCount += 123456789;
-                updateSpaceCountLabel();
-            }
+            if (Application.isEditor) {
+                if (Input.GetKeyDown("n")) {
+                    spaceCount += 123456789;
+                    updateSpaceCountLabel();
+                }
 
-            if (Input.GetKeyDown("m")) {
-                player.giveSpacebars(12345678);
+                if (Input.GetKeyDown("m")) {
+                    player.giveSpacebars(12345678);
+                }
             }
         }	
 
