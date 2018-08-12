@@ -39,7 +39,9 @@ public class SpaceGameController : Activatable {
         AUTO_SPACE,
         SWITCH_POWER,
         ORDER_SPARES,
-        DURABILITY
+        DURABILITY,
+        STOCHASTIC_BOOST,
+        SHRINE
     }
 
     class ShopItemInfo {
@@ -48,6 +50,7 @@ public class SpaceGameController : Activatable {
         public float growthFactor;
         public int level = 0;
         public int maxLevel;
+        public bool isUnlocked = false;
         public GameObject labelTextMesh;
         public GameObject priceTextMesh;
     }
@@ -60,10 +63,8 @@ public class SpaceGameController : Activatable {
         shopItemIndices[2] = ShopItem.DURABILITY;
         shopItemIndices[3] = ShopItem.ORDER_SPARES;
 
-        shopItemIndices[4] = ShopItem.AUTO_SPACE;
-        shopItemIndices[5] = ShopItem.SWITCH_POWER;
-        shopItemIndices[6] = ShopItem.DURABILITY;
-        shopItemIndices[7] = ShopItem.ORDER_SPARES;
+        shopItemIndices[4] = ShopItem.STOCHASTIC_BOOST;
+        shopItemIndices[5] = ShopItem.SHRINE;
 
         shopItemDatas = new Dictionary<ShopItem, ShopItemInfo>();
         {
@@ -102,6 +103,24 @@ public class SpaceGameController : Activatable {
             shopItemDatas[ShopItem.DURABILITY] = sh;
         }
 
+        {
+            var sh = new ShopItemInfo();
+            sh.txt = "Stochastic Boost";
+            sh.cost = 1000;
+            sh.growthFactor = 5f;
+            sh.maxLevel = 3;
+            shopItemDatas[ShopItem.STOCHASTIC_BOOST] = sh;
+        }
+
+        {
+            var sh = new ShopItemInfo();
+            sh.txt = "Space Buddha Shrine";
+            sh.cost = 10000;
+            sh.growthFactor = 1;
+            sh.maxLevel = 1;
+            shopItemDatas[ShopItem.SHRINE] = sh;
+        }
+
         instantiateShopLabels();
 
         lastAutoSpaceTick = Time.time;
@@ -118,9 +137,8 @@ public class SpaceGameController : Activatable {
             currentPos.y = 0;
             currentPricePos.y = 0;
 
-            for (int i = 0; i < 4; ++i) {
-                var shopItemI = slotIndex + i;
-                var sh = shopItemDatas[shopItemIndices[shopItemI]];
+            for (int i = slotIndex; i < Mathf.Min(slotIndex + 4, shopItemIndices.Count); ++i) {
+                var sh = shopItemDatas[shopItemIndices[i]];
 
                 var textMesh = Instantiate(textMeshPrefab, shopSlots.transform);
                 textMesh.transform.localPosition = currentPos;
@@ -193,10 +211,8 @@ public class SpaceGameController : Activatable {
                 shopReticuleYTarget -= 0.53f;
                 shopItemIndex += 1;
             } else if (Input.GetKeyDown("right")) {
-                shopItemSlotIndex += 1;
                 moveSlots(1);
             } else if (Input.GetKeyDown("left")) {
-                shopItemSlotIndex -= 1;
                 moveSlots(-1);
             } else if (Input.GetKeyDown("return")) {
                 var sh = getCurrentShopItemInfo();
@@ -232,7 +248,21 @@ public class SpaceGameController : Activatable {
 	}
 
     void moveSlots(int dir) {
-        shopSlotXTarget += dir * SLOT_X_SPACING;
+        Debug.Log(shopItemSlotIndex);
+        if (dir == -1) {
+            if (shopItemSlotIndex <= 0) {
+                return;
+            }
+        } else if (dir == 1) {
+            if (shopItemSlotIndex >= (Mathf.CeilToInt(shopItemIndices.Count / 4f) - 1)) {
+                return;
+            }
+        } else {
+            Debug.Log("Unsupported value of dir passed: " + dir);
+        }
+
+        shopItemSlotIndex += dir;
+        shopSlotXTarget -= dir * SLOT_X_SPACING;
     }
 
     void updateSlotsAnimation() {
@@ -252,6 +282,12 @@ public class SpaceGameController : Activatable {
         var labelTM = shi.labelTextMesh.GetComponent<TextMesh>();
         var priceTM = shi.priceTextMesh.GetComponent<TextMesh>();
 
+        if (shi.isUnlocked) {
+            labelTM.text = shi.txt;
+        } else {
+            labelTM.text = "???";
+        }
+
         priceTM.text = shi.cost + "";
 
         if (spaceCount < shi.cost || shi.level >= shi.maxLevel) {
@@ -267,13 +303,14 @@ public class SpaceGameController : Activatable {
         shi.level++;
         spaceCount -= shi.cost;
         shi.cost = (int) (shi.cost * shi.growthFactor);
+        shi.isUnlocked = true;
 
         updateSpaceCountLabel();
         updateAllShopItems();
     }
 
     ShopItem getCurrentShopItem() {
-        return shopItemIndices[shopItemIndex];
+        return shopItemIndices[shopItemSlotIndex * 4 + shopItemIndex];
     }
 
     ShopItemInfo getCurrentShopItemInfo() {
