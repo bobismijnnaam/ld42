@@ -166,9 +166,27 @@ public class SpaceGameController : Activatable {
         if (spaceBar.isAvailable()) {
             spaceBar.doSink();
             spaceCount += getCurrentSpacePower();
+
+            if (hasStochasticBoost()) {
+                spaceCount += getStochasticBoost();
+            }
+
             updateSpaceCountLabel();
             updateAllShopItems();
         }
+    }
+
+    bool hasStochasticBoost() {
+        var shi = shopItemDatas[ShopItem.STOCHASTIC_BOOST];
+        return shi.isUnlocked;
+    }
+
+    int getStochasticBoost() {
+        var shi = shopItemDatas[ShopItem.STOCHASTIC_BOOST];
+        if (Random.value < (shi.level / 100)) {
+            return Random.Range(1000, 5000);
+        }
+        return 0;
     }
 
     int getCurrentSpacePower() {
