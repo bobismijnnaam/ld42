@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Assertions;
 
 public class Satan : Activatable {
@@ -50,6 +51,7 @@ public class Satan : Activatable {
                 if (lightIndex == 4) {
                     startSFFade(5);
                     player.doShakeFadeIn(5);
+                    Invoke("switchScenes", 5);
                 }
             }
         } else {
@@ -66,5 +68,9 @@ public class Satan : Activatable {
         musicFadeInStart = Time.time;
         musicFadeInDuration = t;
         endOfDays.Play();
+    }
+    
+    void switchScenes() {
+        SceneManager.LoadScene("BlackScene");
     }
 }
