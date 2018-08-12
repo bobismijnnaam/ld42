@@ -13,6 +13,7 @@ public class SpaceGameController : Activatable {
     public GameObject spaceGameObject;
     public Camera screenCamera;
     public SpareDeliverer spareDeliverer;
+    public TextMesh deliveryTomorrowText;
 
     public float approachSpeedPercentage = 0.20f;
 
@@ -74,8 +75,8 @@ public class SpaceGameController : Activatable {
         {
             var sh = new ShopItemInfo();
             sh.txt = "Order spares online";
-            sh.cost = 10;
-            sh.growthFactor = 100;
+            sh.cost = 100;
+            sh.growthFactor = 10;
             shopItemDatas[ShopItem.ORDER_SPARES] = sh;
         }
 
@@ -181,6 +182,7 @@ public class SpaceGameController : Activatable {
                     }
                     if (getCurrentShopItem() == ShopItem.ORDER_SPARES) {
                         spareDeliverer.addOrder();
+                        deliveryTomorrowText.gameObject.SetActive(true);
                     }
                 }
             }

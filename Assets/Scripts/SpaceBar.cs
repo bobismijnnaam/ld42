@@ -23,7 +23,7 @@ public class SpaceBar : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		maxSinks = 100;
+		maxSinks = 30;
         renderer = gameObject.GetComponent<Renderer>();
 	}
 	

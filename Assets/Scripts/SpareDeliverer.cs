@@ -20,7 +20,7 @@ public class SpareDeliverer : MonoBehaviour {
 	}
 
     public void addOrder() {
-        numOrdered += 100;
+        numOrdered += 10;
     }
 
     public bool hasOrder() {

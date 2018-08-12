@@ -14,6 +14,7 @@ public class DuvetComponent : Activatable {
     public BlinkComponent blackSleepSurface;
     public AudioSource carTootToot;
     public SpareDeliverer spareDeliverer;
+    public TextMesh deliveryTomorrowText;
 
     private State state = State.NOT_SLEEPING;
 
@@ -40,9 +41,8 @@ public class DuvetComponent : Activatable {
         Invoke("wakeUp", 5.5f);
         if (spareDeliverer.hasOrder()) {
             Invoke("triggerToot", 3.5f);
-        } else {
-            Debug.Log("no order!");
-        }
+            deliveryTomorrowText.gameObject.SetActive(false);
+        } 
     }
 
     public void wakeUp() {
