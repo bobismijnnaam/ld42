@@ -51,6 +51,12 @@ public class Player : MonoBehaviour {
         } else {
             flavorText.enabled = false;
         }
+
+        if (Input.GetKeyDown("b")) {
+            var lr = mainCamera.transform.localRotation;
+            lr.x = 20;
+            mainCamera.transform.localRotation = lr;
+        }
 	}
 
     GameObject getSpaceBarInFront() {
