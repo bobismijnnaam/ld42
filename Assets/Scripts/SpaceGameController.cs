@@ -41,8 +41,9 @@ public class SpaceGameController : Activatable {
     class ShopItemInfo {
         public string txt;
         public int cost;
-        public int growthFactor;
+        public float growthFactor;
         public int level = 0;
+        public int maxLevel;
         public GameObject labelTextMesh;
         public GameObject priceTextMesh;
     }
@@ -52,15 +53,16 @@ public class SpaceGameController : Activatable {
         shopItemIndices = new Dictionary<int, ShopItem>();
         shopItemIndices[0] = ShopItem.AUTO_SPACE;
         shopItemIndices[1] = ShopItem.SWITCH_POWER;
-        shopItemIndices[2] = ShopItem.ORDER_SPARES;
-        shopItemIndices[3] = ShopItem.DURABILITY;
+        shopItemIndices[2] = ShopItem.DURABILITY;
+        shopItemIndices[3] = ShopItem.ORDER_SPARES;
 
         shopItemDatas = new Dictionary<ShopItem, ShopItemInfo>();
         {
             var sh = new ShopItemInfo();
             sh.txt = "AutoSpace";
             sh.cost = 10;
-            sh.growthFactor = 5;
+            sh.growthFactor = 20;
+            sh.maxLevel = 4;
             shopItemDatas[ShopItem.AUTO_SPACE] = sh;
         }
 
@@ -69,22 +71,25 @@ public class SpaceGameController : Activatable {
             sh.txt = "Switch Power";
             sh.cost = 10;
             sh.growthFactor = 80;
+            sh.maxLevel = 4;
             shopItemDatas[ShopItem.SWITCH_POWER] = sh;
         }
 
         {
             var sh = new ShopItemInfo();
             sh.txt = "Order spares online";
-            sh.cost = 100;
-            sh.growthFactor = 10;
+            sh.cost = 1000;
+            sh.growthFactor = 1.01f;
+            sh.maxLevel = 999999;
             shopItemDatas[ShopItem.ORDER_SPARES] = sh;
         }
 
         {
             var sh = new ShopItemInfo();
             sh.txt = "Durability";
-            sh.cost = 10;
-            sh.growthFactor = 100;
+            sh.cost = 500;
+            sh.growthFactor = 2;
+            sh.maxLevel = 4;
             shopItemDatas[ShopItem.DURABILITY] = sh;
         }
 
@@ -115,6 +120,8 @@ public class SpaceGameController : Activatable {
             currentPos.y -= ySpacing;
             currentPricePos.y -= ySpacing;
         }
+
+        updateAllShopItems();
     }
 	
     void spaceBarPressed() {
@@ -122,6 +129,7 @@ public class SpaceGameController : Activatable {
             spaceBar.doSink();
             spaceCount += getCurrentSpacePower();
             updateSpaceCountLabel();
+            updateAllShopItems();
         }
     }
 
@@ -137,7 +145,7 @@ public class SpaceGameController : Activatable {
 
     int getCurrentMaxSinks() {
         var shi = shopItemDatas[ShopItem.DURABILITY];
-        var maxSinks = new int [] {100, 200, 500, 1000, 2000};
+        var maxSinks = new int [] {200, 250, 300, 400, 600};
         return maxSinks[shi.level];
     }
 
@@ -171,7 +179,7 @@ public class SpaceGameController : Activatable {
 
             if (Input.GetKeyDown("return")) {
                 var sh = getCurrentShopItemInfo();
-                if (sh.cost <= spaceCount) {
+                if (sh.cost <= spaceCount && sh.level < sh.maxLevel) {
                     buyShopItem(sh);
 
                     if (getCurrentShopItem() == ShopItem.AUTO_SPACE) {
@@ -188,7 +196,7 @@ public class SpaceGameController : Activatable {
             }
             
             if (Input.GetKeyDown("n")) {
-                spaceCount += 100;
+                spaceCount += 123456789;
                 updateSpaceCountLabel();
             }
         }	
@@ -200,7 +208,7 @@ public class SpaceGameController : Activatable {
 
     void updateAllShopItems() {
         for (int i = 0; i < 4; ++i) {
-            var sh = shopItemDatas[shopItemIndices[shopItemIndex]];
+            var sh = shopItemDatas[shopItemIndices[i]];
             updateShopItem(sh);
         }
     }
@@ -211,17 +219,19 @@ public class SpaceGameController : Activatable {
 
         priceTM.text = shi.cost + "";
 
-        if (spaceCount >= shi.cost) {
-            labelTM.color = new Color(0.7f, 0.7f, 0.7f);
+        if (spaceCount < shi.cost || shi.level >= shi.maxLevel) {
+            labelTM.color = new Color(0.3f, 0.3f, 0.3f);
+            priceTM.color = new Color(0.3f, 0.3f, 0.3f);
         } else {
             labelTM.color = new Color(1, 1, 1);
+            priceTM.color = new Color(1, 1, 1);
         }
     }
 
     void buyShopItem(ShopItemInfo shi) {
         shi.level++;
         spaceCount -= shi.cost;
-        shi.cost *= shi.growthFactor;
+        shi.cost = (int) (shi.cost * shi.growthFactor);
 
         updateSpaceCountLabel();
         updateAllShopItems();
@@ -245,8 +255,8 @@ public class SpaceGameController : Activatable {
 
     void updateAutoSpace() {
         var shi = shopItemDatas[ShopItem.AUTO_SPACE];
-        var spacesPerSecArr = new int [] {1, 10, 100, 1000};
         if (shi.level > 0) {
+            var spacesPerSecArr = new int [] {1, 3, 8, 20};
             var spacesPerSec = spacesPerSecArr[shi.level - 1];
             var timePerTick = 1 / (double) spacesPerSec;
             var timeDiff = Time.time - lastAutoSpaceTick;

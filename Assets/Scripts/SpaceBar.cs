@@ -4,37 +4,54 @@ using UnityEngine;
 
 public class SpaceBar : MonoBehaviour {
 
-    public const float SINK_PAUSE = 0.01f;
+    public const float SINK_PAUSE = 0.3f;
 
     enum SpaceBarState {
         AVAILABLE,
-        SINKING,
         BROKEN
+    }
+
+    enum AnimState {
+        STILL,
+        SINKING
     }
 
     public GameObject brokenSpaceBar;
     public GameObject brokenText;
+    public float sinkDepth;
 
-    private Renderer renderer;
+    private Renderer myRenderer;
     private SpaceBarState state;
+    private AnimState animState;
     private float sinkingStart;
     private int numSinks;
     private int maxSinks;
+    private Vector3 startPos;
+    private Vector3 lowPos;
 
 	// Use this for initialization
 	void Start () {
-		maxSinks = 30;
-        renderer = gameObject.GetComponent<Renderer>();
+		maxSinks = 150;
+        myRenderer = gameObject.GetComponent<Renderer>();
+        startPos = gameObject.transform.position;
+        lowPos = startPos - new Vector3(0, sinkDepth, 0);
+        animState = AnimState.STILL;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        if (state == SpaceBarState.AVAILABLE) {
-            // Nothing
-        } else if (state == SpaceBarState.SINKING) {
-            if (Time.time - sinkingStart >= SINK_PAUSE) {
-                state = SpaceBarState.AVAILABLE;
+        if (animState == AnimState.SINKING) {
+            var dt = Time.time - sinkingStart;
+            if (dt >= SINK_PAUSE) {
+                animState = AnimState.STILL;
+                gameObject.transform.position = startPos;
                 Debug.Log("Finished sinking");
+            } else {
+                // Between 0 and 1
+                var p = dt / SINK_PAUSE;
+                // Between 0 and 1 and 0 again
+                p = Mathf.Sin(p * Mathf.PI);
+                gameObject.transform.position = Vector3.Lerp(startPos, lowPos, p);
             }
         }
 
@@ -50,15 +67,16 @@ public class SpaceBar : MonoBehaviour {
     }
 
     public void doSink() {
-        state = SpaceBarState.SINKING;
+        animState = AnimState.SINKING;
         sinkingStart = Time.time;
         numSinks += 1;
+        gameObject.transform.position = startPos;
 
         Debug.Log("Started sinking");
 
         if (numSinks == maxSinks) {
             state = SpaceBarState.BROKEN;
-            renderer.enabled = false;
+            myRenderer.enabled = false;
             brokenSpaceBar.SetActive(true);
             brokenText.SetActive(true);
         }
@@ -70,14 +88,14 @@ public class SpaceBar : MonoBehaviour {
         
         var currentColor = Color.Lerp(startColor, endColor, (float) numSinks / maxSinks);
 
-        renderer.material.color = currentColor;
+        myRenderer.material.color = currentColor;
     }
 
     public void repair() {
         numSinks = 0;
         updateSpaceBarColor();
         brokenSpaceBar.SetActive(false);
-        renderer.enabled = true;
+        myRenderer.enabled = true;
         brokenText.SetActive(false);
         state = SpaceBarState.AVAILABLE;
     }
