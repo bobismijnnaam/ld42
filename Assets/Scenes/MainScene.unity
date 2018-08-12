@@ -3490,6 +3490,7 @@ GameObject:
   - component: {fileID: 625755139}
   - component: {fileID: 625755138}
   - component: {fileID: 625755141}
+  - component: {fileID: 625755142}
   m_Layer: 0
   m_Name: MenuCamera
   m_TagString: Untagged
@@ -3576,6 +3577,18 @@ MonoBehaviour:
   toDeActivate:
   - {fileID: 219973907}
   - {fileID: 886592857}
+--- !u!114 &625755142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 625755137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff26db721962cdf4a8edcdfa9a767d2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profile: {fileID: 11400000, guid: 339e170ddf5d546b0ae5a2798e8c99fd, type: 2}
 --- !u!1 &631987891
 GameObject:
   m_ObjectHideFlags: 0
@@ -4721,6 +4734,7 @@ GameObject:
   - component: {fileID: 1118964140}
   - component: {fileID: 748143372}
   - component: {fileID: 748143371}
+  - component: {fileID: 748143374}
   m_Layer: 2
   m_Name: FirstPersonCharacter
   m_TagString: MainCamera
@@ -4758,6 +4772,18 @@ Transform:
   m_Father: {fileID: 1438641758}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &748143374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 748143370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff26db721962cdf4a8edcdfa9a767d2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profile: {fileID: 11400000, guid: 00f3711a4fdd3405090bd89bb5ff6d22, type: 2}
 --- !u!1 &748754888
 GameObject:
   m_ObjectHideFlags: 0
@@ -4856,6 +4882,7 @@ GameObject:
   - component: {fileID: 773934892}
   - component: {fileID: 773934891}
   - component: {fileID: 773934890}
+  - component: {fileID: 773934893}
   m_Layer: 0
   m_Name: SleepCamera
   m_TagString: Untagged
@@ -4931,6 +4958,18 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &773934893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 773934888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff26db721962cdf4a8edcdfa9a767d2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profile: {fileID: 11400000, guid: 00f3711a4fdd3405090bd89bb5ff6d22, type: 2}
 --- !u!1 &778153488
 GameObject:
   m_ObjectHideFlags: 0
@@ -12596,6 +12635,7 @@ GameObject:
   - component: {fileID: 2098293636}
   - component: {fileID: 2098293635}
   - component: {fileID: 2098293634}
+  - component: {fileID: 2098293638}
   m_Layer: 0
   m_Name: ScreenViewCamera
   m_TagString: Untagged
@@ -12670,6 +12710,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+--- !u!114 &2098293638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2098293633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff26db721962cdf4a8edcdfa9a767d2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profile: {fileID: 11400000, guid: 00f3711a4fdd3405090bd89bb5ff6d22, type: 2}
 --- !u!4 &2108524420 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4089602526441020, guid: e8f30d802707944848f0785adf073453,
