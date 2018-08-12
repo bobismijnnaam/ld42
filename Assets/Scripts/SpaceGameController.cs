@@ -91,7 +91,7 @@ public class SpaceGameController : Activatable {
             var sh = new ShopItemInfo();
             sh.txt = "Order spares online";
             sh.cost = 500;
-            sh.growthFactor = 2f;
+            sh.growthFactor = 1.5f;
             sh.maxLevel = 999999;
             shopItemDatas[ShopItem.ORDER_SPARES] = sh;
         }
