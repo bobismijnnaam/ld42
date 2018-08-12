@@ -36,7 +36,7 @@ public class QuestionComponent : Activatable {
         currentSource.Play();
 
         if (Random.value < 0.2) {
-            player.shakeFade(2.5f);
+            player.doShakeFadeOut(2.5f);
         }
     }
 

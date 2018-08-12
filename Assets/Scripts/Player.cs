@@ -22,6 +22,7 @@ public class Player : MonoBehaviour {
     public float maxShakeDist;
 
     private bool shakeFadeOn;
+    private bool shakeFadeIn;
     private float shakeFadeStart;
     private float shakeFadeDuration;
 
@@ -69,24 +70,27 @@ public class Player : MonoBehaviour {
                 shaker.transform.localEulerAngles = Vector3.zero;
             } else {
                 var p = dt / shakeFadeDuration;
-                var dist = maxShakeDist * (1 - p);
+                if (!shakeFadeIn) {
+                    p = 1 - p;
+                }
+                var dist = maxShakeDist * p;
                 shaker.transform.localEulerAngles = Random.onUnitSphere * dist;
             }
         }
-
-        if (Input.GetKeyDown("b")) {
-            shakeFade(5);
-        }
 	}
 
-    public void shakeFade(float t) {
+    public void doShakeFadeOut(float t) {
         shakeFadeOn = true;
         shakeFadeStart = Time.time;
         shakeFadeDuration = t;
+        shakeFadeIn = false;
     }
 
-    public void setContinuousShake(bool s) {
-        continuousShakeOn = s;
+    public void doShakeFadeIn(float t) {
+        shakeFadeOn = true;
+        shakeFadeStart = Time.time;
+        shakeFadeDuration = t;
+        shakeFadeIn = true;
     }
 
     GameObject getSpaceBarInFront() {
