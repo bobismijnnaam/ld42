@@ -8,6 +8,9 @@ public class MenuScript : MonoBehaviour {
     public Player player;
     private Camera menuCamera;
 
+    public GameObject[] toActivate;
+    public GameObject[] toDeActivate;
+
 	// Use this for initialization
 	void Start () {
 
@@ -18,6 +21,13 @@ public class MenuScript : MonoBehaviour {
         if (Input.GetKeyDown("f")) {
             player.gameObject.SetActive(true);
             Destroy(gameObject);
+
+            foreach (GameObject obj in toActivate) {
+                obj.SetActive(true);
+            }
+            foreach (GameObject obj in toDeActivate) {
+                obj.SetActive(false);
+            }
         }
 	}
 }
