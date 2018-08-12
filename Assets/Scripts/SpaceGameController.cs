@@ -247,6 +247,10 @@ public class SpaceGameController : Activatable {
                         spareDeliverer.addOrder();
                         deliveryTomorrowText.gameObject.SetActive(true);
                     }
+                    if (getCurrentShopItem() == ShopItem.SHRINE) {
+                        spareDeliverer.addShrine();
+                        deliveryTomorrowText.gameObject.SetActive(true);
+                    }
                 }
             }
 

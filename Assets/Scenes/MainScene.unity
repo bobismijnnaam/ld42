@@ -7711,6 +7711,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1118964139}
+  shrine: {fileID: 1748793759}
   packagePrefab: {fileID: 1821377577135346, guid: a0ab78574a4354603b03d0d4ee60a738,
     type: 2}
 --- !u!1 &1636198741

@@ -5,7 +5,9 @@ using UnityEngine;
 public class PackageComponent : Activatable {
 
     public Player player;
+    public GameObject shrine;
     public int numContainedSpacebars = 0;
+    public bool containsShrine = true;
 
 	// Use this for initialization
 	void Start () {
@@ -23,6 +25,7 @@ public class PackageComponent : Activatable {
 
     public override void activate() {
         player.giveSpacebars(numContainedSpacebars);
+        shrine.SetActive(true);
         Destroy(gameObject);
     }
 }
