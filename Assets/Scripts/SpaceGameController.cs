@@ -127,9 +127,9 @@ public class SpaceGameController : Activatable {
 	}
 
     private const float SLOT_X_SPACING = 11;
+    private const float Y_SPACING = 0.53f;
 
     void instantiateShopLabels() {
-        const float Y_SPACING = 0.53f;
         var currentPos = new Vector3(0, 0, 0);
         var currentPricePos = new Vector3(6.39f, 0, 0);
 
@@ -205,11 +205,15 @@ public class SpaceGameController : Activatable {
             }
 
             if (Input.GetKeyDown("up")) {
-                shopReticuleYTarget += 0.53f;
-                shopItemIndex -= 1;
+                //shopReticuleYTarget += Y_SPACING;
+                //shopItemIndex -= 1;
+
+                moveReticule(-1);
             } else if (Input.GetKeyDown("down")) {
-                shopReticuleYTarget -= 0.53f;
-                shopItemIndex += 1;
+                //shopReticuleYTarget -= Y_SPACING;
+                //shopItemIndex += 1;
+
+                moveReticule(1);
             } else if (Input.GetKeyDown("right")) {
                 moveSlots(1);
             } else if (Input.GetKeyDown("left")) {
@@ -247,8 +251,19 @@ public class SpaceGameController : Activatable {
         updateSlotsAnimation();
 	}
 
+    void moveReticule(int dir) {
+        shopReticuleYTarget -= Y_SPACING * dir;
+        shopItemIndex += dir;
+        
+        clampShopReticule();
+    }
+
+    void setReticuleRowTarget(int row) {
+        shopItemIndex = row;
+        shopReticuleYTarget = row * Y_SPACING;
+    }
+
     void moveSlots(int dir) {
-        Debug.Log(shopItemSlotIndex);
         if (dir == -1) {
             if (shopItemSlotIndex <= 0) {
                 return;
@@ -263,6 +278,14 @@ public class SpaceGameController : Activatable {
 
         shopItemSlotIndex += dir;
         shopSlotXTarget -= dir * SLOT_X_SPACING;
+
+        clampShopReticule();
+    }
+
+    void clampShopReticule() {
+        if (shopItemSlotIndex * 4 + shopItemIndex >= shopItemIndices.Count) {
+            setReticuleRowTarget(shopItemIndices.Count - shopItemSlotIndex * 4 - 1);
+        }
     }
 
     void updateSlotsAnimation() {
