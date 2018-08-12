@@ -50,7 +50,7 @@ public class SpaceGameController : MonoBehaviour {
             var sh = new ShopItemInfo();
             sh.txt = "AutoSpace";
             sh.cost = 10;
-            sh.growthFactor = 100;
+            sh.growthFactor = 5;
             shopItemDatas[ShopItem.AUTO_SPACE] = sh;
         }
 
@@ -58,7 +58,7 @@ public class SpaceGameController : MonoBehaviour {
             var sh = new ShopItemInfo();
             sh.txt = "Switch Power";
             sh.cost = 10;
-            sh.growthFactor = 100;
+            sh.growthFactor = 80;
             shopItemDatas[ShopItem.SWITCH_POWER] = sh;
         }
 
@@ -125,6 +125,12 @@ public class SpaceGameController : MonoBehaviour {
         spaceCountLabel.text = spaceCount + "";
     }
 
+    int getCurrentMaxSinks() {
+        var shi = shopItemDatas[ShopItem.DURABILITY];
+        var maxSinks = new int [] {100, 200, 500, 1000, 2000};
+        return maxSinks[shi.level];
+    }
+
 	// Update is called once per frame
 	void Update () {
         if (player.isPlaying()) {
@@ -157,10 +163,13 @@ public class SpaceGameController : MonoBehaviour {
                 var sh = getCurrentShopItemInfo();
                 if (sh.cost <= spaceCount) {
                     buyShopItem(sh);
-                }
 
-                if (getCurrentShopItem() == ShopItem.AUTO_SPACE) {
-                    lastAutoSpaceTick = Time.time;
+                    if (getCurrentShopItem() == ShopItem.AUTO_SPACE) {
+                        lastAutoSpaceTick = Time.time;
+                    }
+                    if (getCurrentShopItem() == ShopItem.DURABILITY) {
+                        spaceBar.setMaxSinks(getCurrentMaxSinks());
+                    }
                 }
             }
             

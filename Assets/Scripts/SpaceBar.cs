@@ -81,4 +81,8 @@ public class SpaceBar : MonoBehaviour {
         brokenText.SetActive(false);
         state = SpaceBarState.AVAILABLE;
     }
+
+    public void setMaxSinks(int maxSinks) {
+        this.maxSinks = maxSinks;
+    }
 }
