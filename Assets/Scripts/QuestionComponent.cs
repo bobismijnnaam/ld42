@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class QuestionComponent : Activatable {
 
+    [NotNull]
+    public Player player;
+
     AudioSource currentSource;
 
 	// Use this for initialization
@@ -31,6 +34,10 @@ public class QuestionComponent : Activatable {
 
         currentSource = getRandomAudioSource();
         currentSource.Play();
+
+        if (Random.value < 0.2) {
+            player.shakeFade(2.5f);
+        }
     }
 
     AudioSource getRandomAudioSource() {

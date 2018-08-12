@@ -17,6 +17,16 @@ public class Player : MonoBehaviour {
     private PlayerMode playerMode = PlayerMode.WALKING;
     private int numSpaceBars = 0;
 
+    [NotNull]
+    public GameObject shaker;
+    public float maxShakeDist;
+
+    private bool shakeFadeOn;
+    private float shakeFadeStart;
+    private float shakeFadeDuration;
+
+    private bool continuousShakeOn;
+
     enum PlayerMode {
         WALKING,
         NOT_WALKING
@@ -52,12 +62,32 @@ public class Player : MonoBehaviour {
             flavorText.enabled = false;
         }
 
+        if (shakeFadeOn) {
+            var dt = Time.time - shakeFadeStart;
+            if (dt >= shakeFadeDuration) {
+                shakeFadeOn = false;
+                shaker.transform.localEulerAngles = Vector3.zero;
+            } else {
+                var p = dt / shakeFadeDuration;
+                var dist = maxShakeDist * (1 - p);
+                shaker.transform.localEulerAngles = Random.onUnitSphere * dist;
+            }
+        }
+
         if (Input.GetKeyDown("b")) {
-            var lr = mainCamera.transform.localRotation;
-            lr.x = 20;
-            mainCamera.transform.localRotation = lr;
+            shakeFade(5);
         }
 	}
+
+    public void shakeFade(float t) {
+        shakeFadeOn = true;
+        shakeFadeStart = Time.time;
+        shakeFadeDuration = t;
+    }
+
+    public void setContinuousShake(bool s) {
+        continuousShakeOn = s;
+    }
 
     GameObject getSpaceBarInFront() {
         RaycastHit hit;

@@ -3919,6 +3919,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 829dc88ab5b934717983d1b3298e54e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 1118964139}
 --- !u!1 &697692008
 GameObject:
   m_ObjectHideFlags: 0
@@ -6106,6 +6107,8 @@ MonoBehaviour:
   mainCamera: {fileID: 1118964140}
   flavorText: {fileID: 20201245}
   spaceBarCountText: {fileID: 2031208703}
+  shaker: {fileID: 1438641757}
+  maxShakeDist: 5
 --- !u!20 &1118964140
 Camera:
   m_ObjectHideFlags: 0
@@ -8149,7 +8152,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1438641758}
   m_Layer: 2
-  m_Name: GameObject
+  m_Name: Shaker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
