@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpaceGameController : MonoBehaviour {
+public class SpaceGameController : Activatable {
 
     public Player player;
     public SpaceBar spaceBar;
@@ -11,6 +11,7 @@ public class SpaceGameController : MonoBehaviour {
     public GameObject shopReticules;
     public GameObject textMeshPrefab;
     public GameObject spaceGameObject;
+    public Camera screenCamera;
 
     public float approachSpeedPercentage = 0.20f;
 
@@ -20,6 +21,13 @@ public class SpaceGameController : MonoBehaviour {
     private Dictionary<int, ShopItem> shopItemIndices;
     private Dictionary<ShopItem, ShopItemInfo> shopItemDatas;
     private double lastAutoSpaceTick;
+
+    enum State {
+        PLAYING,
+        NOT_PLAYING
+    }
+
+    private State state = State.NOT_PLAYING;
 
     enum ShopItem {
         AUTO_SPACE,
@@ -133,7 +141,7 @@ public class SpaceGameController : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-        if (player.isPlaying()) {
+        if (state == State.PLAYING) {
             // Game logic
             if (Input.GetKeyDown("space")) {
                 spaceBarPressed();
@@ -243,6 +251,26 @@ public class SpaceGameController : MonoBehaviour {
                 updateSpaceCountLabel();
                 lastAutoSpaceTick = Time.time - leftover;
             }
+        }
+    }
+
+    public override string getDescription() {
+        if (state == State.PLAYING) {
+            return "to leave";
+        } else {
+            return "to play";
+        }
+    }
+
+    public override void activate() {
+        if (state == State.PLAYING) {
+            player.setViewWalkEnabled(true);
+            screenCamera.enabled = false;
+            state = State.NOT_PLAYING;
+        } else if (state == State.NOT_PLAYING) {
+            player.setViewWalkEnabled(false);
+            screenCamera.enabled = true;
+            state = State.PLAYING;
         }
     }
 }

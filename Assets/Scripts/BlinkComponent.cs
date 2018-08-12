@@ -5,6 +5,7 @@ using UnityEngine;
 public class BlinkComponent : MonoBehaviour {
 
     private TextMesh text;
+    private MeshRenderer meshRenderer;
     private State state;
     private float start;
     private float duration;
@@ -16,9 +17,8 @@ public class BlinkComponent : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        if (GetComponent<TextMesh>() != null) {
-            text = GetComponent<TextMesh>();
-        }
+        text = GetComponent<TextMesh>();
+        meshRenderer = GetComponent<MeshRenderer>();
 	}
 	
 	// Update is called once per frame
@@ -34,11 +34,14 @@ public class BlinkComponent : MonoBehaviour {
 	}
 
     void setOpacity(float o) {
-        Debug.Log("Setting setOpacity at " + o);
         if (text != null) {
             var clr = text.color;
             clr.a = o;
             text.color = clr;
+        } else if (meshRenderer != null) {
+            var clr = meshRenderer.material.color;
+            clr.a = o;
+            meshRenderer.material.color = clr;
         }
     }
 
